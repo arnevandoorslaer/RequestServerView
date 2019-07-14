@@ -1,0 +1,23 @@
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" media="all" href="css/bootstrap.css">
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/player.js"></script>
+  <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
+</head>
+
+<body class="container" onload="ready()">
+  <main class="vertical-middle">
+    <!--style="width:0;height:0;border:0; border:none;"-->
+    <h2 class="text-center">Now playing: <span id="current"></span></h2>
+    <h2 class="text-center">Up next: <span id="next"></span></h2>
+    <div class="text-center p-5">
+      <div class="iframe" id="player"></div>
+    </div>
+  </main>
+</body>
+
+</html>
