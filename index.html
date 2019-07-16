@@ -5,16 +5,16 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" media="all" href="css/reset.css">
-  <link rel="stylesheet" media="all" href="css/bootstrap.css">
-  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
+  <link rel="stylesheet" media="all" href="css/simple.css">
+  <link rel="stylesheet" media="all" href="css/bootstrap.css">
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 
-<body class="container" onload="ready()">
-  <main>
+<body class="container-bg" onload="ready()">
+  <main class="container">
     <section>
         <div class="input-group" id="search">
           <button type="submit" class="input-group-btn" onclick="getSearchResult()">
@@ -26,5 +26,4 @@
     <section id="song_list"></section>
   </main>
 </body>
-
 </html>

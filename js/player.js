@@ -1,5 +1,6 @@
 var player;
 
+let ip = "193.191.177.8:10867";
 let currentId = getSong("current");
 let nextId = getSong("next");
 let nowPlaying;
@@ -17,7 +18,7 @@ function getCurrentAndNext() {
 function getSong(type) {
   $.ajax({
     type: "GET",
-    url: "http://localhost:8080/song/" + type,
+    url: "http://" + ip + "/song/" + type,
     success: function(json) {
       let p = $("#" + type);
       p.empty();
@@ -36,7 +37,7 @@ function getSong(type) {
 
 function skipSong() {
   $.ajax({
-    url: "http://localhost:8080/song/skip",
+    url: "http://" + ip + "/song/skip",
     type: "GET",
     success: function(json) {
       if (json.length > 0) {
@@ -67,8 +68,6 @@ function onYouTubeIframeAPIReady() {
       'rel': 0,
       'autoplay': 1
     },
-    height: '50%',
-    width: '100%',
     events: {
       'onReady': onPlayerReady,
       'onStateChange': onPlayerStateChange,
