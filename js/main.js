@@ -1,6 +1,7 @@
 let song_list;
 let search_list;
-let ip = "193.191.177.8:10867";
+//let ip = "193.191.177.8:10867";
+let ip = "localhost:8080";
 
 function ready() {
   song_list = $("#song_list");
@@ -49,7 +50,7 @@ function getSearchResult(searchTerm) {
   if (searchTerm.length > 2) {
     $.ajax({
       type: "GET",
-      url: "http://" + ip + ":8080/song/search/" + searchTerm,
+      url: "http://" + ip + "/song/search/" + searchTerm,
       success: function(json) {
         console.log(json);
         search_list.empty();
