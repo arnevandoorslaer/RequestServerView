@@ -1,7 +1,7 @@
 var player;
 
-//let ip = "193.191.177.8:10867";
-let ip = "localhost:8080";
+let ip = "193.191.177.8:10867";
+//let ip = "localhost:8080";
 let currentId = getSong("current");
 let nextId = getSong("next");
 let nowPlaying;

@@ -1,7 +1,7 @@
 let song_list;
 let search_list;
-//let ip = "193.191.177.8:10867";
-let ip = "localhost:8080";
+let ip = "193.191.177.8:10867";
+//let ip = "localhost:8080";
 
 function ready() {
   song_list = $("#song_list");
