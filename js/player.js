@@ -1,6 +1,6 @@
 var player;
 
-let wan = "http://arnevandoorslaer.ga:8080";
+let wan = "http://www.arnevandoorslaer.ga:8080";
 let lan = "http://192.168.0.48:8080";
 let local = "http://localhost:8080";
 
