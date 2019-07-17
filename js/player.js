@@ -2,11 +2,13 @@ var player;
 
 let wan = "http://www.arnevandoorslaer.ga:8080";
 let lan = "http://192.168.0.48:8080";
-let local = "http://localhost:8080";
-
-let random_streams = ["taD9hqwCb1o","hHW1oY26kxQ","jnGUs3jCb_I","Xmu8nWKykUw","kGKkUN50R0c"];
-
 let ip = wan;
+let host = location.host.split(":")[0];
+if (host == "127.0.0.1" || host == "192.168.0.48") {
+  ip = lan;
+}
+
+let random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
 
 let currentId = getSong("current");
 let nextId = getSong("next");
@@ -105,6 +107,6 @@ function onPlayerStateChange(event) {
   }
 }
 
-function getRandomStream(){
+function getRandomStream() {
   return random_streams[Math.floor(Math.random() * random_streams.length)];
 }
