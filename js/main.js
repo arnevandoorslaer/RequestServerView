@@ -1,11 +1,18 @@
 let song_list;
 let search_list;
-let ip = "193.191.177.8:10867";
-//let ip = "localhost:8080";
+let extra;
+
+
+
+let wan = "http://arnevandoorslaer.ga:8080";
+let lan = "http://192.168.0.48:8080";
+let local = "http://localhost:8080";
+let ip = wan;
 
 function ready() {
   song_list = $("#song_list");
   search_list = $("#search_list");
+  extra = $("#extra");
   createInput();
   getSongs();
 }
@@ -33,7 +40,7 @@ function createInput() {
 function getSongs() {
   $.ajax({
     type: "GET",
-    url: "http://" + ip + "/song/all",
+    url: ip + "/song/all",
     success: function(json) {
       fillSongList(json);
     },
@@ -46,16 +53,15 @@ function getSongs() {
 }
 
 function getSearchResult(searchTerm) {
-
+  searchTerm = $("#searchTerm").val();
   if (searchTerm.length > 2) {
     $.ajax({
       type: "GET",
-      url: "http://" + ip + "/song/search/" + searchTerm,
+      url: ip + "/song/search/" + searchTerm,
       success: function(json) {
-        console.log(json);
         search_list.empty();
         var table_list = $(`<table class="table table-hover table-dark table-striped">`);
-        table_list.append(`<thead><th class="">SEARCH RESULTS  Click to add song</th></thead>`);
+        table_list.append(`<thead><th>SEARCH RESULTS  Click to add song</th></thead>`);
         var tbody = $("<tbody>");
         for (let i = 0; i < json.length; i++) {
           tbody.append(`
@@ -79,26 +85,37 @@ function addSong(songId, title, artist) {
                     "title":"` + title + `",
                     "artist":"` + artist + `"
                   }`;
-  console.log(jsonString);
   $.ajax({
     beforeSend: function(xhrObj) {
       xhrObj.setRequestHeader("Content-Type", "application/json");
       xhrObj.setRequestHeader("Accept", "application/json");
     },
-    url: "http://" + ip + "/song/add",
+    url: ip + "/song/add",
     type: "POST",
     datatype: "json",
     data: jsonString,
     success: function(json) {
+      console.log(json);
+      search_list.empty();
       fillSongList(json);
+      extra.append(`<div class="alert alert-success">ADDED ` + title + `</div>`);
+    },
+    error: function(json) {
+      extra.append(`<div class="alert alert-danger">` + json.responseText + `</div>`);
     }
   });
+
+  setTimeout(fade_out, 5000);
+
+  function fade_out() {
+    $("#extra").empty();
+  }
 }
 
 function fillSongList(json) {
   song_list.empty();
   var table_list = $(`<table class="table table-dark table-striped">`);
-  table_list.append(`<thead><th class="">NEXT UP: ` + json.length + ` SONGS</th></thead>`);
+  table_list.append(`<thead><th>NEXT UP: ` + json.length + ` SONGS</th></thead>`);
   var tbody = $("<tbody>");
   for (let i = 0; i < json.length; i++) {
     tbody.append(`
@@ -110,13 +127,19 @@ function fillSongList(json) {
   song_list.append(table_list);
 }
 
-
-
 function escapeHtml(unsafe) {
-    return unsafe
-         .replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#039;");
- }
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function wait(ms) {
+  var start = new Date().getTime();
+  var end = start;
+  while (end < start + ms) {
+    end = new Date().getTime();
+  }
+}

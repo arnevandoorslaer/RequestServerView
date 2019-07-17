@@ -11,12 +11,12 @@
   background-color: #B7AB5C;
 }
 
-#song_list table th {
+#song_list table th,#search_list table th{
   color: #fefefe;
   background-color: #6A6A6A;
 }
 
 .color-white {
   color: #FFFFFF;
-  text-shadow: 5px 5px 5px black; 
+  text-shadow: 5px 5px 5px black;
 }

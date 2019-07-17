@@ -1,7 +1,13 @@
 var player;
 
-let ip = "193.191.177.8:10867";
-//let ip = "localhost:8080";
+let wan = "http://arnevandoorslaer.ga:8080";
+let lan = "http://192.168.0.48:8080";
+let local = "http://localhost:8080";
+
+let random_streams = ["taD9hqwCb1o","hHW1oY26kxQ","jnGUs3jCb_I","Xmu8nWKykUw","kGKkUN50R0c"];
+
+let ip = wan;
+
 let currentId = getSong("current");
 let nextId = getSong("next");
 let nowPlaying;
@@ -19,7 +25,7 @@ function getCurrentAndNext() {
 function getSong(type) {
   $.ajax({
     type: "GET",
-    url: "http://" + ip + "/song/" + type,
+    url: ip + "/song/" + type,
     success: function(json) {
       let p = $("#" + type);
       p.empty();
@@ -38,7 +44,7 @@ function getSong(type) {
 
 function skipSong() {
   $.ajax({
-    url: "http://" + ip + "/song/skip",
+    url: ip + "/song/skip",
     type: "GET",
     success: function(json) {
       if (json.length > 0) {
@@ -46,6 +52,7 @@ function skipSong() {
         nowPlaying = currentId;
         player.loadVideoById(json[0].songId);
       } else {
+        player.loadVideoById(getRandomStream());
         check();
       }
     }
@@ -96,4 +103,8 @@ function onPlayerStateChange(event) {
   if (event.data == YT.PlayerState.ENDED) {
     skipSong();
   }
+}
+
+function getRandomStream(){
+  return random_streams[Math.floor(Math.random() * random_streams.length)];
 }
