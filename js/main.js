@@ -6,8 +6,14 @@ let extra;
 
 let wan = "http://www.arnevandoorslaer.ga:8080";
 let lan = "http://192.168.0.48:8080";
-let local = "http://localhost:8080";
+
 let ip = wan;
+
+let host = location.host.split(":")[0];
+
+if(host == "127.0.0.1" || host == "192.168.0.48"){
+  ip = lan;
+}
 
 function ready() {
   song_list = $("#song_list");
@@ -45,14 +51,15 @@ function getSongs() {
       fillSongList(json);
     },
     error: function() {
-      song_list.empty();
-      song_list.append("<p>Something went wrong...</p>");
+      extra.empty();
+      extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
     }
   });
-  setTimeout(getSongs, 10000);
+  setTimeout(getSongs, 5000);
 }
 
 function getSearchResult(searchTerm) {
+  extra.empty();
   searchTerm = $("#searchTerm").val();
   if (searchTerm.length > 2) {
     $.ajax({
@@ -73,8 +80,8 @@ function getSearchResult(searchTerm) {
         search_list.append(table_list);
       },
       error: function() {
-        search_list.empty();
-        search_list.append("<p>Something went wrong...</p>");
+        extra.empty();
+        extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
       }
     });
   }
@@ -95,7 +102,6 @@ function addSong(songId, title, artist) {
     datatype: "json",
     data: jsonString,
     success: function(json) {
-      console.log(json);
       search_list.empty();
       fillSongList(json);
       extra.append(`<div class="alert alert-success">ADDED ` + title + `</div>`);
@@ -104,12 +110,7 @@ function addSong(songId, title, artist) {
       extra.append(`<div class="alert alert-danger">` + json.responseText + `</div>`);
     }
   });
-
   setTimeout(fade_out, 5000);
-
-  function fade_out() {
-    $("#extra").empty();
-  }
 }
 
 function fillSongList(json) {
@@ -136,10 +137,6 @@ function escapeHtml(unsafe) {
     .replace(/'/g, "&#039;");
 }
 
-function wait(ms) {
-  var start = new Date().getTime();
-  var end = start;
-  while (end < start + ms) {
-    end = new Date().getTime();
-  }
+function fade_out() {
+  $("#extra").empty();
 }
