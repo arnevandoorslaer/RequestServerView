@@ -1,7 +1,7 @@
 var player;
 
-let wan = "http://www.arnevandoorslaer.ga:8085";
-let lan = "http://192.168.0.48:8085";
+let wan = "http://www.arnevandoorslaer.ga:8080";
+let lan = "http://192.168.0.48:8080";
 let ip = wan;
 let host = location.host.split(":")[0];
 if (host == "127.0.0.1" || host == "192.168.0.48") {

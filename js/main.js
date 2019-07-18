@@ -4,8 +4,8 @@ let extra;
 
 
 
-let wan = "http://www.arnevandoorslaer.ga:8085";
-let lan = "http://192.168.0.48:8085";
+let wan = "http://www.arnevandoorslaer.ga:8080";
+let lan = "http://192.168.0.48:8080";
 let ip = wan;
 let host = location.host.split(":")[0];
 console.log(host);
@@ -66,7 +66,6 @@ function getSearchResult(searchTerm) {
       type: "GET",
       url: ip + "/song/search/" + searchTerm,
       success: function(json) {
-          console.log("succes makker");
         search_list.empty();
         var table_list = $(`<table class="table table-hover table-dark table-striped">`);
         table_list.append(`<thead><th>SEARCH RESULTS  Click to add song</th></thead>`);
@@ -81,7 +80,6 @@ function getSearchResult(searchTerm) {
         search_list.append(table_list);
       },
       error: function() {
-          console.log("niet succes makker");
         extra.empty();
         extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
       }
