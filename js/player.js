@@ -1,12 +1,6 @@
 var player;
+let ip = "http://192.168.0.48:8080";
 
-let wan = "http://www.arnevandoorslaer.ga:8080";
-let lan = "http://192.168.0.48:8080";
-let ip = wan;
-let host = location.host.split(":")[0];
-if (host == "127.0.0.1" || host == "192.168.0.48") {
-  ip = lan;
-}
 
 let random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
 
@@ -74,9 +68,11 @@ function check() {
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
+    width: 600,
+    height: 400,
     playerVars: {
       'rel': 0,
-      'autoplay': 1
+      'autoplay': 1,
     },
     events: {
       'onReady': onPlayerReady,
@@ -93,6 +89,7 @@ function onPlayerReady(event) {
 
 function onError(event) {
   if (event.data == 150) {
+    console.log("not found");
     skipSong();
   }
   if (event.data == YT.PlayerState.PAUSED) {

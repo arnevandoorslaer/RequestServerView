@@ -2,17 +2,7 @@ let song_list;
 let search_list;
 let extra;
 
-
-
-let wan = "http://www.arnevandoorslaer.ga:8080";
-let lan = "http://192.168.0.48:8080";
-let ip = wan;
-let host = location.host.split(":")[0];
-console.log(host);
-if(host == "127.0.0.1" || host == "192.168.0.48"){
-  ip = lan;
-  console.log(ip);
-}
+let ip = "http://192.168.0.48:8080";
 
 function ready() {
   song_list = $("#song_list");
