@@ -3,6 +3,8 @@ let search_list;
 let extra;
 
 let ip = "http://192.168.0.48:8080";
+//ip = "http://localhost:8080";
+
 
 function ready() {
   song_list = $("#song_list");

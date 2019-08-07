@@ -1,6 +1,6 @@
 var player;
 let ip = "http://192.168.0.48:8080";
-
+//ip = "http://localhost:8080";
 
 let random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
 
@@ -9,6 +9,7 @@ let nextId = getSong("next");
 let nowPlaying;
 
 function ready() {
+  openSocket();
   getCurrentAndNext();
 }
 
@@ -56,7 +57,6 @@ function skipSong() {
 }
 
 function check() {
-  console.log("checking");
   getSong("current");
   if (currentId == "none") {
     setTimeout(check, 2000);
@@ -73,6 +73,8 @@ function onYouTubeIframeAPIReady() {
     playerVars: {
       'rel': 0,
       'autoplay': 1,
+      'enablejsapi': 1,
+      'origin': 'https://127.0.0.1:3000'
     },
     events: {
       'onReady': onPlayerReady,
@@ -106,4 +108,21 @@ function onPlayerStateChange(event) {
 
 function getRandomStream() {
   return random_streams[Math.floor(Math.random() * random_streams.length)];
+}
+
+
+function openSocket() {
+  webSocket = new WebSocket("ws://192.168.0.48:8080/echo");
+
+  webSocket.onopen = function(event) {
+    webSocket.send("open");
+  };
+
+  webSocket.onmessage = function(event) {
+    writeResponse(event.data);
+  };
+}
+
+function writeResponse(text) {
+  player.setVolume(text);
 }
