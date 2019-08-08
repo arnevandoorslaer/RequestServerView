@@ -46,7 +46,7 @@ function getSongs() {
       extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
     }
   });
-  //setTimeout(getSongs, 5000);
+  setTimeout(getSongs, 5000);
 }
 
 function getSearchResult(searchTerm) {
