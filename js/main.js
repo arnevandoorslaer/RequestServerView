@@ -46,7 +46,7 @@ function getSongs() {
       extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
     }
   });
-  setTimeout(getSongs, 5000);
+  //setTimeout(getSongs, 5000);
 }
 
 function getSearchResult(searchTerm) {
@@ -111,10 +111,13 @@ function fillSongList(json) {
   table_list.append(`<thead><th>NEXT UP: ` + json.length + ` SONGS</th></thead>`);
   var tbody = $("<tbody>");
   for (let i = 0; i < json.length; i++) {
-    tbody.append(`
+    var tr = $(`
       <tr id="song">
-      <td class="text-center"><strong>` + json[i].title + "</strong><br>" + json[i].artist + `</td>
+      <td class="text-center">
+      <img src="img/skip.png" onclick="skipSong(` + json[i].id + `)">
+      <strong>` + json[i].title + "</strong><br>" + json[i].artist + `</td>
       </tr>`);
+    tbody.append(tr);
   }
   table_list.append(tbody);
   song_list.append(table_list);
@@ -131,4 +134,16 @@ function escapeHtml(unsafe) {
 
 function fade_out() {
   $("#extra").empty();
+}
+
+
+function skipSong(id) {
+  $.ajax({
+    url: ip + "/song/skip/" + id,
+    type: "GET",
+    success: function(json) {
+      search_list.empty();
+      fillSongList(json);
+    }
+  });
 }

@@ -41,7 +41,7 @@ function getSong(type) {
 
 function skipSong() {
   $.ajax({
-    url: ip + "/song/skip",
+    url: ip + "/song/skip/player",
     type: "GET",
     success: function(json) {
       if (json.length > 0) {
