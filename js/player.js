@@ -1,5 +1,5 @@
 var player;
-let ip = "http://arnevandoorslaer.ga:8080";
+let ip = "http://www.arnevandoorslaer.ga:8080";
 //ip = "http://localhost:8080";
 
 let random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
