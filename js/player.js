@@ -1,5 +1,5 @@
 var player;
-let ip = "http://192.168.0.48:8080";
+let ip = "http://arnevandoorslaer.ga:8080";
 //ip = "http://localhost:8080";
 
 let random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
@@ -112,7 +112,7 @@ function getRandomStream() {
 
 
 function openSocket() {
-  webSocket = new WebSocket("ws://192.168.0.48:8080/echo");
+  webSocket = new WebSocket("ws://arnevandoorslaer.ga:8080/echo");
 
   webSocket.onopen = function(event) {
     webSocket.send("open");

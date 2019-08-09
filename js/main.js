@@ -2,7 +2,7 @@ let song_list;
 let search_list;
 let extra;
 
-let ip = "http://192.168.0.48:8080";
+let ip = "http://arnevandoorslaer.ga:8080";
 //ip = "http://localhost:8080";
 
 
