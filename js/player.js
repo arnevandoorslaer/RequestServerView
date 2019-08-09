@@ -112,7 +112,7 @@ function getRandomStream() {
 
 
 function openSocket() {
-  webSocket = new WebSocket("ws://arnevandoorslaer.ga:8080/echo");
+  webSocket = new WebSocket("ws://www.arnevandoorslaer.ga:8080/echo");
 
   webSocket.onopen = function(event) {
     webSocket.send("open");
