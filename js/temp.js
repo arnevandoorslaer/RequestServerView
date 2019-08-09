@@ -15,7 +15,7 @@ function ready() {
 
 
 function openSocket() {
-  webSocket = new WebSocket("ws://192.168.0.48:8080/echo");
+  webSocket = new WebSocket("ws://www.arnevandoorslaer.ga:8080/echo");
 
   webSocket.onopen = function(event) {
     webSocket.send("open");
