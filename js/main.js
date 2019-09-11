@@ -142,7 +142,7 @@ function skipSong(id) {
     url: ip + "/song/skip/" + id,
     type: "GET",
     success: function(json) {
-      search_list.empty();
+      song_list.empty();
       fillSongList(json);
     }
   });
