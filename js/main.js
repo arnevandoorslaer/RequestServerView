@@ -1,6 +1,7 @@
 let song_list;
 let search_list;
 let extra;
+let songs = [];
 
 let ip = "http://www.arnevandoorslaer.ga:8080";
 //ip = "http://localhost:8080";
@@ -52,7 +53,6 @@ function getSongs() {
 function getSearchResult(searchTerm) {
   extra.empty();
   searchTerm = $("#searchTerm").val();
-  console.log(searchTerm);
   if (searchTerm.length > 2) {
     $.ajax({
       type: "GET",
@@ -64,10 +64,21 @@ function getSearchResult(searchTerm) {
         var tbody = $("<tbody>");
         for (let i = 0; i < json.length; i++) {
           tbody.append(`
-            <tr id="song" class="songcontainer" onclick="addSong('` + json[i].songId + `','` + escapeHtml(json[i].title) + `','` + escapeHtml(json[i].artist) + `')">
-            <td class="text-center"><strong>` + json[i].title + "</strong><br>" + json[i].artist + `</td>
+            <tr id="song" class="songcontainer">
+            <td class="text-center">
+              <div onclick="addSong('` + json[i].songId + `','` + escapeHtml(json[i].title) + `','` + escapeHtml(json[i].artist) + `')">
+                <strong>` + json[i].title + "</strong><br>" + json[i].artist + `
+              </div>
+              <input class="checkbox" type="checkbox" value="false" onclick="bulkAddArr('` + json[i].songId + `','` + escapeHtml(json[i].title) + `','` + escapeHtml(json[i].artist) + `')">
+            </td>
             </tr>`);
         }
+        tbody.append(`
+          <tr id="song" class="songcontainer" onclick="bulkAdd();">
+          <td class="text-center">
+          BULK ADD
+          </td>
+          </tr>`);
         table_list.append(tbody);
         search_list.append(table_list);
       },
@@ -76,6 +87,22 @@ function getSearchResult(searchTerm) {
         extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
       }
     });
+  }
+}
+
+function bulkAddArr(songId, title, artist) {
+  let temp = [songId, title, artist];
+  var index = getIndex(temp, songs);
+  if (index > -1) {
+    songs.splice(index, 1);
+  } else {
+    songs.push(temp);
+  }
+}
+
+function bulkAdd() {
+  for (var i = songs.length - 1; i >= 0; i--) {
+    addSong(songs[i][0], songs[i][1], songs[i][2]);
   }
 }
 
@@ -146,4 +173,13 @@ function skipSong(id) {
       fillSongList(json);
     }
   });
+}
+
+function getIndex(item, list) {
+  for (var i = list.length - 1; i >= 0; i--) {
+    if (list[i][0] == item[0]) {
+      return i;
+    }
+  }
+  return -1
 }

@@ -27,7 +27,7 @@ img{
   height: 3em;
 }
 
-i {
+#song i{
   float: right;
   border: solid black;
   border-width: 0 3px 3px 0;
@@ -43,4 +43,8 @@ i {
 .down {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
+}
+
+.checkbox{
+  float: right;
 }

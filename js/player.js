@@ -9,6 +9,7 @@ let nextId = getSong("next");
 let nowPlaying;
 
 function ready() {
+
   openSocket();
   getCurrentAndNext();
 }
@@ -18,6 +19,7 @@ function getCurrentAndNext() {
   getSong("next");
   setTimeout(getCurrentAndNext, 5000);
 }
+
 
 function getSong(type) {
   $.ajax({
@@ -91,7 +93,6 @@ function onPlayerReady(event) {
 
 function onError(event) {
   if (event.data == 150) {
-    console.log("not found");
     skipSong();
   }
   if (event.data == YT.PlayerState.PAUSED) {

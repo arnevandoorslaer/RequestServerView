@@ -98,7 +98,6 @@ function moveUp(id) {
       fillSongList(json);
     }
   });
-  console.log(id);
 }
 
 function moveDown(id) {
@@ -110,5 +109,4 @@ function moveDown(id) {
       fillSongList(json);
     }
   });
-  console.log(id);
 }
