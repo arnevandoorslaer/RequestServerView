@@ -66,7 +66,7 @@ function fillSongList(json) {
       <tr id="song">
       <td class="text-center">
       <img src="img/skip.png" onclick="skipSong(` + json[i].id + `)">
-      <strong>` + json[i].title + "</strong><br>" + json[i].artist + ` ` + json[i].priority + `
+      <strong>` + json[i].title + "</strong><br>" + json[i].artist + `
         <i class="arrow up" onclick="moveUp('` + json[i].songId + `');"></i>
         <br>
         <i class="arrow down" onclick="moveDown('` + json[i].songId + `');"></i>
