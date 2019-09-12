@@ -7,6 +7,7 @@ let ip = "http://www.arnevandoorslaer.ga:8080";
 //ip = "http://localhost:8080";
 
 
+
 function ready() {
   song_list = $("#song_list");
   search_list = $("#search_list");
@@ -60,10 +61,11 @@ function getSearchResult(searchTerm) {
       success: function(json) {
         search_list.empty();
         var table_list = $(`<table class="table table-hover table-dark table-striped">`);
-        table_list.append(`<thead><th>SEARCH RESULTS  Click to add song</th></thead>`);
-        var tbody = $("<tbody>");
-        for (let i = 0; i < json.length; i++) {
-          tbody.append(`
+        if (json.length > 0) {
+          table_list.append(`<thead><th>SEARCH RESULTS  Click to add song</th></thead>`);
+          var tbody = $("<tbody>");
+          for (let i = 0; i < json.length; i++) {
+            tbody.append(`
             <tr id="song" class="songcontainer">
             <td class="text-center">
               <div onclick="addSong('` + json[i].songId + `','` + escapeHtml(json[i].title) + `','` + escapeHtml(json[i].artist) + `')">
@@ -72,14 +74,19 @@ function getSearchResult(searchTerm) {
               <input class="checkbox" type="checkbox" value="false" onclick="bulkAddArr('` + json[i].songId + `','` + escapeHtml(json[i].title) + `','` + escapeHtml(json[i].artist) + `')">
             </td>
             </tr>`);
+          }
+
+          tbody.append(`
+            <tr id="song" class="songcontainer" onclick="bulkAdd();">
+            <td class="text-center">
+            BULK ADD
+            </td>
+            </tr>`);
+
+          table_list.append(tbody);
+        }else{
+          table_list.append(`<thead><th>No songs found...</th></thead>`);
         }
-        tbody.append(`
-          <tr id="song" class="songcontainer" onclick="bulkAdd();">
-          <td class="text-center">
-          BULK ADD
-          </td>
-          </tr>`);
-        table_list.append(tbody);
         search_list.append(table_list);
       },
       error: function() {
@@ -126,6 +133,7 @@ function addSong(songId, title, artist) {
       extra.append(`<div class="alert alert-success">ADDED ` + title + `</div>`);
     },
     error: function(json) {
+      extra.empty();
       extra.append(`<div class="alert alert-danger">` + json.responseText + `</div>`);
     }
   });

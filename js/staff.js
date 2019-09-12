@@ -4,12 +4,15 @@ let message;
 let score;
 let song_list;
 var rangeslider
+let extra;
 
 let ip = "http://www.arnevandoorslaer.ga:8080";
 //ip = "http://localhost:8080";
 
 
+
 function ready() {
+  extra = $("#extra");
   song_list = $("#song_list");
   getSongs();
 
@@ -109,4 +112,26 @@ function moveDown(id) {
       fillSongList(json);
     }
   });
+}
+
+function authenticate() {
+  var key = $("#key").val();
+  console.log(key);
+  $.ajax({
+    url: ip + "/authenticate/" + key,
+    type: "GET",
+    success: function(json) {
+      extra.empty();
+      if (json) {
+        extra.append(`<div class="alert alert-success">AUTHENTICATED</div>`);
+      } else {
+        extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
+      }
+    }
+  });
+  setTimeout(fade_out, 2500);
+}
+
+function fade_out() {
+  $("#extra").empty();
 }

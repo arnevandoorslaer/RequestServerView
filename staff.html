@@ -14,6 +14,15 @@
 
 <body class="container-bg" onload="ready()">
   <main class="container vertical-middle">
+
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <input class="btn btn-primary" type="submit" value="AUTHENTICATE" onclick="authenticate();">
+      </div>
+      <input type="text" class="form-control" placeholder="authentication key" id="key">
+    </div>
+    <section id="extra"></section>
+
     <div class="text-center">
       <input type="range" min="0" max="100" value="10" id="sliderRange">
     </div>
