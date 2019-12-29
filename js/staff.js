@@ -6,7 +6,7 @@ let song_list;
 var rangeslider
 let extra;
 
-let ip = "https://94.224.127.170:8080";
+let ip = "https://www.arnevandoorslaer.ga:8080";
 //ip = "http://localhost:8080";
 
 
