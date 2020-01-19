@@ -1,19 +1,61 @@
-let song_list;
-let search_list;
 let extra;
-let songs = [];
+let key = "AIzaSyC5XqwePKeK-GkmPeAyjzhKbKc3lAdL89c";
 
-let ip = "https://www.arnevandoorslaer.ga:8080";
-//ip = "http://localhost:8080";
+db.collection('song').orderBy('added').onSnapshot(snapshot => {
+    let changes = snapshot.docChanges();
+    changes.forEach(change => {
+        if(change.type == 'added'){
+            displaySong(change.doc);
+            displayUpNext();
+        } else if (change.type == 'removed'){
+            let li = requestList.querySelector('[id=' + change.doc.id + ']');
+            requestList.removeChild(li);
+        }
+    });
+});
 
+function displaySong(song){
+  let tr = document.createElement("tr");
+  tr.id = song.id;
+  let td = document.createElement("td");
+  td.className = "text-center";
+  td.innerHTML = "<strong>" + song.data().title + "</strong><br>" + song.data().artist;
+  tr.append(td);
+  let tbody = document.querySelector('#song_list_body');
+  tbody.appendChild(tr);
+}
 
+function displayUpNext(){
+  let thead = document.querySelector('#song_list_thead');
+  db.collection('song').get().then(snap => {
+    size = snap.size;
+    thead.innerHTML = "NEXT UP: "+size+" SONGS";
+  })
+}
+
+function displayResultText(){
+  let thead = document.querySelector('#search_list_thead');
+  db.collection('song').get().then(snap => {
+    size = snap.size;
+    thead.innerHTML = "SEARCH RESULTS  Click to add song";
+  })
+}
+
+function displaySearchResult(id,title,artist){
+  displayResultText();
+  let tr = document.createElement("tr");
+  let td = document.createElement("td");
+  td.className = "text-center";
+  td.innerHTML = "<div onclick=\"addSong(\'" + id + "\',\'" + title + "\',\'" + artist + "\')\"> <strong>" + title + "</strong><br>" + artist + "</div>";
+  tr.append(td);
+  let tbody = document.querySelector('#search_list_body');
+  console.log(tbody);
+  tbody.appendChild(tr);
+}
 
 function ready() {
-  song_list = $("#song_list");
-  search_list = $("#search_list");
   extra = $("#extra");
   createInput();
-  getSongs();
 }
 
 function createInput() {
@@ -29,67 +71,33 @@ function createInput() {
     if (e.keyCode == 13) {
       getSearchResult(searchTerm);
     }
-    if (searchTerm.length == 0) {
-      search_list.empty();
-    }
   });
   search.append(searchTermInput);
 }
 
-function getSongs() {
-  $.ajax({
-    type: "GET",
-    url: ip + "/song/all",
-    success: function(json) {
-      fillSongList(json);
-    },
-    error: function() {
-      extra.empty();
-      extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
-    }
-  });
-  setTimeout(getSongs, 5000);
-}
-
 function getSearchResult(searchTerm) {
   extra.empty();
-  searchTerm = $("#searchTerm").val();
+  searchTerm = escapeHtml($("#searchTerm").val()).replace(" ","%20");
+  let url = "https://www.googleapis.com/youtube/v3/search?part=snippet&key="+key+"&maxResults=5&duration=short&q=" + searchTerm;
   if (searchTerm.length > 2) {
     $.ajax({
       type: "GET",
-      url: ip + "/song/search/" + searchTerm,
+      url: url,
       success: function(json) {
-        search_list.empty();
-        var table_list = $(`<table class="table table-hover table-dark table-striped">`);
-        if (json.length > 0) {
-          table_list.append(`<thead><th>SEARCH RESULTS  Click to add song</th></thead>`);
-          var tbody = $("<tbody>");
-          for (let i = 0; i < json.length; i++) {
-            tbody.append(`
-            <tr id="song" class="songcontainer">
-            <td class="text-center">
-              <div onclick="addSong('` + json[i].songId + `','` + escapeHtml(json[i].title) + `','` + escapeHtml(json[i].artist) + `')">
-                <strong>` + json[i].title + "</strong><br>" + json[i].artist + `
-              </div>
-              <input class="checkbox" type="checkbox" value="false" onclick="bulkAddArr('` + json[i].songId + `','` + escapeHtml(json[i].title) + `','` + escapeHtml(json[i].artist) + `')">
-            </td>
-            </tr>`);
+        $("#search_list_thead").removeAttr('hidden');
+        let songs = json.items;
+        if (songs.length > 0) {
+          for (let i = 0; i < songs.length; i++) {
+            let id = songs[i].id.videoId;
+            let title = unescapeHtml(songs[i].snippet.title);
+            let artist = unescapeHtml(songs[i].snippet.channelTitle);
+            console.log("displaying search result");
+            displaySearchResult(id,title,artist);
           }
-
-          tbody.append(`
-            <tr id="song" class="songcontainer" onclick="bulkAdd();">
-            <td class="text-center">
-            BULK ADD
-            </td>
-            </tr>`);
-
-          table_list.append(tbody);
-        }else{
-          table_list.append(`<thead><th>No songs found...</th></thead>`);
         }
-        search_list.append(table_list);
       },
       error: function() {
+        console.log(url);
         extra.empty();
         extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
       }
@@ -97,65 +105,17 @@ function getSearchResult(searchTerm) {
   }
 }
 
-function bulkAddArr(songId, title, artist) {
-  let temp = [songId, title, artist];
-  var index = getIndex(temp, songs);
-  if (index > -1) {
-    songs.splice(index, 1);
-  } else {
-    songs.push(temp);
-  }
-}
-
-function bulkAdd() {
-  for (var i = songs.length - 1; i >= 0; i--) {
-    addSong(songs[i][0], songs[i][1], songs[i][2]);
-  }
-}
-
-function addSong(songId, title, artist) {
-  let jsonString = `{"songId":"` + songId + `",
-                    "title":"` + title + `",
-                    "artist":"` + artist + `"
-                  }`;
-  $.ajax({
-    beforeSend: function(xhrObj) {
-      xhrObj.setRequestHeader("Content-Type", "application/json");
-      xhrObj.setRequestHeader("Accept", "application/json");
-    },
-    url: ip + "/song/add",
-    type: "POST",
-    datatype: "json",
-    data: jsonString,
-    success: function(json) {
-      search_list.empty();
-      fillSongList(json);
-      extra.append(`<div class="alert alert-success">ADDED ` + title + `</div>`);
-    },
-    error: function(json) {
-      extra.empty();
-      extra.append(`<div class="alert alert-danger">` + json.responseText + `</div>`);
-    }
-  });
-  setTimeout(fade_out, 5000);
-}
-
-function fillSongList(json) {
-  song_list.empty();
-  var table_list = $(`<table class="table table-dark table-striped">`);
-  table_list.append(`<thead><th>NEXT UP: ` + json.length + ` SONGS</th></thead>`);
-  var tbody = $("<tbody>");
-  for (let i = 0; i < json.length; i++) {
-    var tr = $(`
-      <tr id="song">
-      <td class="text-center">
-      <img src="img/skip.png" onclick="skipSong(` + json[i].id + `)">
-      <strong>` + json[i].title + "</strong><br>" + json[i].artist + `</td>
-      </tr>`);
-    tbody.append(tr);
-  }
-  table_list.append(tbody);
-  song_list.append(table_list);
+function addSong(id,title,artist){
+  db.collection('song').add({
+    video_id: id,
+    title: title,
+    artist: artist,
+    added: firebase.firestore.FieldValue.serverTimestamp()});
+    extra.append(`<div class="alert alert-success">ADDED ` + title + `</div>`);
+    setTimeout(fade_out, 5000);
+    document.querySelector('#search_list_body').innerHTML = "";
+    document.querySelector('#search_list_thead').innerHTML = "";
+    $("#search_list_thead").hide();
 }
 
 function escapeHtml(unsafe) {
@@ -167,27 +127,15 @@ function escapeHtml(unsafe) {
     .replace(/'/g, "&#039;");
 }
 
+function unescapeHtml(unsafe) {
+  return unsafe
+    .replace("&amp;","7")
+    .replace("&lt;","<")
+    .replace("&gt;",">")
+    .replace("&quot;","\"")
+    .replace("&#039;","\'");
+}
+
 function fade_out() {
   $("#extra").empty();
-}
-
-
-function skipSong(id) {
-  $.ajax({
-    url: ip + "/song/skip/" + id,
-    type: "GET",
-    success: function(json) {
-      song_list.empty();
-      fillSongList(json);
-    }
-  });
-}
-
-function getIndex(item, list) {
-  for (var i = list.length - 1; i >= 0; i--) {
-    if (list[i][0] == item[0]) {
-      return i;
-    }
-  }
-  return -1
 }

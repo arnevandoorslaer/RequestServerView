@@ -8,9 +8,6 @@
   <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
   <meta content="utf-8" http-equiv="encoding">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <script type="text/javascript" src="js/jquery.js"></script>
-  <script type="text/javascript" src="js/main.js"></script>
-
   <link rel="stylesheet" media="all" href="css/simple.css">
   <link rel="stylesheet" media="all" href="css/bootstrap.css">
   <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
@@ -26,9 +23,23 @@
       </div>
     </section>
     <section id="extra"></section>
-    <section id="search_list"></section>
-    <section id="song_list"></section>
+    <section>
+      <table id="search_list" class="table table-hover table-dark table-striped">
+        <thead><th id="search_list_thead"  hidden></th></thead>
+        <tbody id="search_list_body"></tbody>
+      </table>
+    </section>
+    <section>
+      <table id="song_list" class="table table-dark table-striped">
+        <thead><th id="song_list_thead"></th></thead>
+        <tbody id="song_list_body"></tbody>
+      </table>
+    </section>
   </main>
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-firestore.js"></script>
+<script src="js/firebase.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
 </body>
-
 </html>

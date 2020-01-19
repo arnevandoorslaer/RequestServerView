@@ -7,13 +7,9 @@
   <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" media="all" href="css/bootstrap.css">
   <link rel="stylesheet" media="all" href="css/simple.css">
-  <script type="text/javascript" src="js/jquery.js"></script>
-  <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
-  <script type="text/javascript" src="js/player.js"></script>
-
 </head>
 
-<body class="container-bg" onload="ready()">
+<body class="container-bg">
   <main class="container vertical-middle">
     <!--style="width:0;height:0;border:0; border:none;"-->
     <div class="text-center">
@@ -22,5 +18,11 @@
     <h2 class="text-center color-white">Now playing: <span id="current"></span></h2>
     <h2 class="text-center color-white">Up next: <span id="next"></span></h2>
   </main>
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-firestore.js"></script>
+  <script src="js/firebase.js"></script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
+  <script type="text/javascript" src="js/player.js"></script>
 </body>
 </html>

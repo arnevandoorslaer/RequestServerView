@@ -1,48 +1,27 @@
 var player;
-let ip = "https://www.arnevandoorslaer.ga:8080";
-//ip = "http://localhost:8080";
+let currentId;
+let nextId;
 
+let currentFireBaseId;
+db.collection('song').orderBy('added').limit(2).onSnapshot(snapshot => {
+    let changes = snapshot.docChanges();
+    currentFireBaseId = changes[0].doc.id;
+    currentId = changes[0].doc.data().video_id;
+    nextId = changes[1].doc.data().video_id;
+    $("#current").text(changes[0].doc.data().title);
+    $("#next").text(changes[1].doc.data().title);
+});
 
 let random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
-
-let currentId = getSong("current");
-let nextId = getSong("next");
 let nowPlaying;
 
-function ready() {
-
-  openSocket();
-  getCurrentAndNext();
-}
-
-function getCurrentAndNext() {
-  getSong("current");
-  getSong("next");
-  setTimeout(getCurrentAndNext, 5000);
-}
-
-
-function getSong(type) {
-  $.ajax({
-    type: "GET",
-    url: ip + "/song/" + type,
-    success: function(json) {
-      let p = $("#" + type);
-      p.empty();
-      p.append(json.title);
-      if (type === "current") {
-        currentId = json.songId;
-        if (currentId != nowPlaying && nowPlaying != undefined) {
-          location.reload(true);
-        }
-      } else if (type === "next") {
-        nextId = json.songId;
-      }
-    }
-  });
-}
-
 function skipSong() {
+  db.collection('song').doc(currentFireBaseId).delete();
+  nowPlaying = currentId;
+  player.loadVideoById(currentId);
+}
+
+/*function skipSong() {
   $.ajax({
     url: ip + "/song/skip/player",
     type: "GET",
@@ -57,7 +36,7 @@ function skipSong() {
       }
     }
   });
-}
+}*/
 
 function check() {
   getSong("current");
@@ -110,21 +89,4 @@ function onPlayerStateChange(event) {
 
 function getRandomStream() {
   return random_streams[Math.floor(Math.random() * random_streams.length)];
-}
-
-
-function openSocket() {
-  webSocket = new WebSocket("ws://www.arnevandoorslaer.ga:8080/echo");
-
-  webSocket.onopen = function(event) {
-    webSocket.send("open");
-  };
-
-  webSocket.onmessage = function(event) {
-    writeResponse(event.data);
-  };
-}
-
-function writeResponse(text) {
-  player.setVolume(text);
 }
