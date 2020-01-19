@@ -1,51 +1,30 @@
 var player;
-let currentId;
-let nextId;
-
-let currentFireBaseId;
-db.collection('song').orderBy('added').limit(2).onSnapshot(snapshot => {
-    let changes = snapshot.docChanges();
-    currentFireBaseId = changes[0].doc.id;
-    currentId = changes[0].doc.data().video_id;
-    nextId = changes[1].doc.data().video_id;
-    $("#current").text(changes[0].doc.data().title);
-    $("#next").text(changes[1].doc.data().title);
-});
-
+let currentId, nextId, currentFireBaseId;
 let random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
 let nowPlaying;
+let songs = [];
+let titles = [];
+
+db.collection('song').orderBy('added').onSnapshot(snapshot => {
+    let changes = snapshot.docChanges();
+    changes.forEach(change => {
+        if(change.type == 'added'){
+          let currentSong = change.doc.data();
+          songs.push(currentSong.video_id);
+          titles.push(currentSong.title);
+        }
+    });
+    currentFireBaseId = changes[0].doc.id;
+    $("#current").text(titles[0]);
+    $("#next").text(titles[1]);
+});
 
 function skipSong() {
+  songs.shift();
+  titles.shift();
   db.collection('song').doc(currentFireBaseId).delete();
-  nowPlaying = currentId;
-  player.loadVideoById(currentId);
-}
-
-/*function skipSong() {
-  $.ajax({
-    url: ip + "/song/skip/player",
-    type: "GET",
-    success: function(json) {
-      if (json.length > 0) {
-        currentId = json[0].songId;
-        nowPlaying = currentId;
-        player.loadVideoById(json[0].songId);
-      } else {
-        player.loadVideoById(getRandomStream());
-        check();
-      }
-    }
-  });
-}*/
-
-function check() {
-  getSong("current");
-  if (currentId == "none") {
-    setTimeout(check, 2000);
-  } else {
-    nowPlaying = currentId;
-    player.loadVideoById(currentId);
-  }
+  nowPlaying = songs[0];
+  player.loadVideoById(nowPlaying);
 }
 
 function onYouTubeIframeAPIReady() {
@@ -67,17 +46,19 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
-  nowPlaying = currentId;
-  event.target.loadVideoById(currentId);
+  nowPlaying = songs[0];
+  console.log(nowPlaying);
+  event.target.loadVideoById(nowPlaying);
 }
 
 function onError(event) {
   if (event.data == 150) {
+    console.log("error");
     skipSong();
   }
   if (event.data == YT.PlayerState.PAUSED) {
-    nowPlaying = currentId;
-    player.loadVideoById(currentId);
+    nowPlaying = songs[0];
+    player.loadVideoById(nowPlaying);
   }
 }
 

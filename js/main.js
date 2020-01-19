@@ -8,20 +8,20 @@ db.collection('song').orderBy('added').onSnapshot(snapshot => {
             displaySong(change.doc);
             displayUpNext();
         } else if (change.type == 'removed'){
-            let li = requestList.querySelector('[id=' + change.doc.id + ']');
-            requestList.removeChild(li);
+            let li = document.querySelector('[id=' + change.doc.id + ']');
+            document.removeChild(li);
         }
     });
 });
 
 function displaySong(song){
   let tr = document.createElement("tr");
-  tr.id = song.id;
   let td = document.createElement("td");
+  let tbody = document.querySelector('#song_list_body');
+  tr.id = song.id;
   td.className = "text-center";
   td.innerHTML = "<strong>" + song.data().title + "</strong><br>" + song.data().artist;
   tr.append(td);
-  let tbody = document.querySelector('#song_list_body');
   tbody.appendChild(tr);
 }
 
@@ -43,13 +43,12 @@ function displayResultText(){
 
 function displaySearchResult(id,title,artist){
   displayResultText();
+  let tbody = document.querySelector('#search_list_body');
   let tr = document.createElement("tr");
   let td = document.createElement("td");
   td.className = "text-center";
   td.innerHTML = "<div onclick=\"addSong(\'" + id + "\',\'" + title + "\',\'" + artist + "\')\"> <strong>" + title + "</strong><br>" + artist + "</div>";
   tr.append(td);
-  let tbody = document.querySelector('#search_list_body');
-  console.log(tbody);
   tbody.appendChild(tr);
 }
 
@@ -91,7 +90,6 @@ function getSearchResult(searchTerm) {
             let id = songs[i].id.videoId;
             let title = unescapeHtml(songs[i].snippet.title);
             let artist = unescapeHtml(songs[i].snippet.channelTitle);
-            console.log("displaying search result");
             displaySearchResult(id,title,artist);
           }
         }
