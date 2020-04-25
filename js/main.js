@@ -11,7 +11,7 @@ db.collection('song').orderBy('added').onSnapshot(snapshot => {
       displayUpNext();
     } else if (change.type == 'removed') {
       let tr = document.querySelector('#' + change.doc.id);
-      console.log("removed " + change.doc.data().title);   
+      console.log("removed " + change.doc.data().title);
       document.removeChild(tr);
     }
   });
@@ -26,7 +26,7 @@ function displaySong(song) {
   td.innerHTML = "<strong>" + song.data().title + "</strong><br>" + song.data().artist;
   tr.append(td);
   tbody.appendChild(tr);
-  console.log("added " + song.data().title);   
+  console.log("added " + song.data().title);
 }
 
 function displayUpNext() {
