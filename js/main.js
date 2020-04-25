@@ -79,6 +79,7 @@ function createInput() {
 }
 
 function getSearchResult(searchTerm) {
+  document.querySelector('#search_list_body').innerHTML = "";
   extra.empty();
   searchTerm = escapeHtml($("#searchTerm").val()).replace(" ", "%20");
   let url = "https://www.googleapis.com/youtube/v3/search?part=snippet&key=" + key + "&maxResults=5&duration=short&q=" + searchTerm;
@@ -90,16 +91,18 @@ function getSearchResult(searchTerm) {
         $("#search_list_thead").removeAttr('hidden');
         let songs = json.items;
         if (songs.length > 0) {
-          for (let i = 0; i < songs.length; i++) {
-            let id = songs[i].id.videoId;
-            let title = unescapeHtml(songs[i].snippet.title);
-            let artist = unescapeHtml(songs[i].snippet.channelTitle);
-            displaySearchResult(id, title, artist);
+
+          for (const song of songs) {
+            if (song.snippet.liveBroadcastContent !== "live") {
+              let id = song.id.videoId;
+              let title = unescapeHtml(song.snippet.title);
+              let artist = unescapeHtml(song.snippet.channelTitle);
+              displaySearchResult(id, title, artist);
+            }
           }
         }
       },
       error: function () {
-        console.log(url);
         extra.empty();
         extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
       }
