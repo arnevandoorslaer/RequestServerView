@@ -4,14 +4,12 @@ let key = "AIzaSyC5XqwePKeK-GkmPeAyjzhKbKc3lAdL89c";
 db.collection('song').orderBy('added').onSnapshot(snapshot => {
   let changes = snapshot.docChanges();
   changes.forEach(change => {
-    console.log(change.doc)
     if (change.type == 'added') {
       $("#song_list_thead").removeAttr('hidden');
       displaySong(change.doc);
       displayUpNext();
     } else if (change.type == 'removed') {
       let tr = document.querySelector('#' + change.doc.id);
-      console.log("removed " + change.doc.data().title);
       document.removeChild(tr);
     }
   });
@@ -26,7 +24,6 @@ function displaySong(song) {
   td.innerHTML = "<strong>" + song.data().title + "</strong><br>" + song.data().artist;
   tr.append(td);
   tbody.appendChild(tr);
-  console.log("added " + song.data().title);
 }
 
 function displayUpNext() {
