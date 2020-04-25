@@ -18,7 +18,7 @@ function ready() {
 
   openSocket();
   rangeslider = document.getElementById("sliderRange");
-  rangeslider.oninput = function() {
+  rangeslider.oninput = function () {
     send(this.value);
   }
 }
@@ -27,11 +27,11 @@ function ready() {
 function openSocket() {
   webSocket = new WebSocket("ws://www.arnevandoorslaer.ga:8080/echo");
 
-  webSocket.onopen = function(event) {
+  webSocket.onopen = function (event) {
     webSocket.send("open");
   };
 
-  webSocket.onmessage = function(event) {
+  webSocket.onmessage = function (event) {
     writeResponse(event.data);
   };
 }
@@ -48,10 +48,10 @@ function getSongs() {
   $.ajax({
     type: "GET",
     url: ip + "/song/all",
-    success: function(json) {
+    success: function (json) {
       fillSongList(json);
     },
-    error: function() {
+    error: function () {
       extra.empty();
       extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
     }
@@ -85,7 +85,7 @@ function skipSong(id) {
   $.ajax({
     url: ip + "/song/skip/" + id + "/player",
     type: "GET",
-    success: function(json) {
+    success: function (json) {
       song_list.empty();
       fillSongList(json);
     }
@@ -96,7 +96,7 @@ function moveUp(id) {
   $.ajax({
     url: ip + "/song/up/" + id,
     type: "GET",
-    success: function(json) {
+    success: function (json) {
       song_list.empty();
       fillSongList(json);
     }
@@ -107,7 +107,7 @@ function moveDown(id) {
   $.ajax({
     url: ip + "/song/down/" + id,
     type: "GET",
-    success: function(json) {
+    success: function (json) {
       song_list.empty();
       fillSongList(json);
     }
@@ -120,7 +120,7 @@ function authenticate() {
   $.ajax({
     url: ip + "/authenticate/" + key,
     type: "GET",
-    success: function(json) {
+    success: function (json) {
       extra.empty();
       if (json) {
         extra.append(`<div class="alert alert-success">AUTHENTICATED</div>`);

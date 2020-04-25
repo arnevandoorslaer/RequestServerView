@@ -2,19 +2,22 @@ let extra;
 let key = "AIzaSyC5XqwePKeK-GkmPeAyjzhKbKc3lAdL89c";
 
 db.collection('song').orderBy('added').onSnapshot(snapshot => {
-    let changes = snapshot.docChanges();
-    changes.forEach(change => {
-        if(change.type == 'added'){
-            displaySong(change.doc);
-            displayUpNext();
-        } else if (change.type == 'removed'){
-            let li = document.querySelector('[id=' + change.doc.id + ']');
-            document.removeChild(li);
-        }
-    });
+  let changes = snapshot.docChanges();
+  changes.forEach(change => {
+    console.log(change.doc)
+    if (change.type == 'added') {
+      $("#song_list_thead").removeAttr('hidden');
+      displaySong(change.doc);
+      displayUpNext();
+    } else if (change.type == 'removed') {
+      let tr = document.querySelector('#' + change.doc.id);
+      console.log("removed " + change.doc.data().title);   
+      document.removeChild(tr);
+    }
+  });
 });
 
-function displaySong(song){
+function displaySong(song) {
   let tr = document.createElement("tr");
   let td = document.createElement("td");
   let tbody = document.querySelector('#song_list_body');
@@ -23,17 +26,18 @@ function displaySong(song){
   td.innerHTML = "<strong>" + song.data().title + "</strong><br>" + song.data().artist;
   tr.append(td);
   tbody.appendChild(tr);
+  console.log("added " + song.data().title);   
 }
 
-function displayUpNext(){
+function displayUpNext() {
   let thead = document.querySelector('#song_list_thead');
   db.collection('song').get().then(snap => {
     size = snap.size;
-    thead.innerHTML = "NEXT UP: "+size+" SONGS";
+    thead.innerHTML = "NEXT UP: " + size + " SONGS";
   })
 }
 
-function displayResultText(){
+function displayResultText() {
   let thead = document.querySelector('#search_list_thead');
   db.collection('song').get().then(snap => {
     size = snap.size;
@@ -41,7 +45,7 @@ function displayResultText(){
   })
 }
 
-function displaySearchResult(id,title,artist){
+function displaySearchResult(id, title, artist) {
   displayResultText();
   let tbody = document.querySelector('#search_list_body');
   let tr = document.createElement("tr");
@@ -65,7 +69,7 @@ function createInput() {
   searchTermInput.type = "text";
   searchTermInput.id = "searchTerm";
   searchTermInput.placeholder = "What are you looking for?";
-  searchTermInput.addEventListener('keyup', function(e) {
+  searchTermInput.addEventListener('keyup', function (e) {
     let searchTerm = $("#searchTerm").val();
     if (e.keyCode == 13) {
       getSearchResult(searchTerm);
@@ -76,13 +80,13 @@ function createInput() {
 
 function getSearchResult(searchTerm) {
   extra.empty();
-  searchTerm = escapeHtml($("#searchTerm").val()).replace(" ","%20");
-  let url = "https://www.googleapis.com/youtube/v3/search?part=snippet&key="+key+"&maxResults=5&duration=short&q=" + searchTerm;
+  searchTerm = escapeHtml($("#searchTerm").val()).replace(" ", "%20");
+  let url = "https://www.googleapis.com/youtube/v3/search?part=snippet&key=" + key + "&maxResults=5&duration=short&q=" + searchTerm;
   if (searchTerm.length > 2) {
     $.ajax({
       type: "GET",
       url: url,
-      success: function(json) {
+      success: function (json) {
         $("#search_list_thead").removeAttr('hidden');
         let songs = json.items;
         if (songs.length > 0) {
@@ -90,11 +94,11 @@ function getSearchResult(searchTerm) {
             let id = songs[i].id.videoId;
             let title = unescapeHtml(songs[i].snippet.title);
             let artist = unescapeHtml(songs[i].snippet.channelTitle);
-            displaySearchResult(id,title,artist);
+            displaySearchResult(id, title, artist);
           }
         }
       },
-      error: function() {
+      error: function () {
         console.log(url);
         extra.empty();
         extra.append(`<div class="alert alert-danger">Something went wrong...</div>`);
@@ -103,17 +107,18 @@ function getSearchResult(searchTerm) {
   }
 }
 
-function addSong(id,title,artist){
+function addSong(id, title, artist) {
   db.collection('song').add({
     video_id: id,
     title: title,
     artist: artist,
-    added: firebase.firestore.FieldValue.serverTimestamp()});
-    extra.append(`<div class="alert alert-success">ADDED ` + title + `</div>`);
-    setTimeout(fade_out, 5000);
-    document.querySelector('#search_list_body').innerHTML = "";
-    document.querySelector('#search_list_thead').innerHTML = "";
-    $("#search_list_thead").hide();
+    added: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  extra.append(`<div class="alert alert-success">ADDED ` + title + `</div>`);
+  setTimeout(fade_out, 5000);
+  document.querySelector('#search_list_body').innerHTML = "";
+  document.querySelector('#search_list_thead').innerHTML = "";
+  $("#search_list_thead").hide();
 }
 
 function escapeHtml(unsafe) {
@@ -127,11 +132,11 @@ function escapeHtml(unsafe) {
 
 function unescapeHtml(unsafe) {
   return unsafe
-    .replace("&amp;","7")
-    .replace("&lt;","<")
-    .replace("&gt;",">")
-    .replace("&quot;","\"")
-    .replace("&#039;","\'");
+    .replace("&amp;", "7")
+    .replace("&lt;", "<")
+    .replace("&gt;", ">")
+    .replace("&quot;", "\"")
+    .replace("&#039;", "\'");
 }
 
 function fade_out() {

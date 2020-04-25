@@ -1,30 +1,26 @@
 var player;
-let currentId, nextId, currentFireBaseId;
-let random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
-let nowPlaying;
-let songs = [];
-let titles = [];
+var random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
+var song_titles = [];
+var song_ids = [];
+var ids = [];
 
-db.collection('song').orderBy('added').onSnapshot(snapshot => {
-    let changes = snapshot.docChanges();
-    changes.forEach(change => {
-        if(change.type == 'added'){
-          let currentSong = change.doc.data();
-          songs.push(currentSong.video_id);
-          titles.push(currentSong.title);
-        }
+collect();
+
+function collect() {
+  db.collection('song').orderBy('added').onSnapshot(snapshot => {
+    snapshot.docChanges().forEach(song => {
+      if (song.type == 'added') add(song);
+      if (song.type == 'removed') remove(song);
     });
-    currentFireBaseId = changes[0].doc.id;
-    $("#current").text(titles[0]);
-    $("#next").text(titles[1]);
-});
+    draw();
+  });
+}
 
-function skipSong() {
-  songs.shift();
-  titles.shift();
-  db.collection('song').doc(currentFireBaseId).delete();
-  nowPlaying = songs[0];
-  player.loadVideoById(nowPlaying);
+
+async function skipSong() {
+  await db.collection('song').doc(ids[0]).delete();
+  draw();
+  player.loadVideoById(song_ids[0]);
 }
 
 function onYouTubeIframeAPIReady() {
@@ -45,20 +41,23 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-function onPlayerReady(event) {
-  nowPlaying = songs[0];
-  console.log(nowPlaying);
-  event.target.loadVideoById(nowPlaying);
+function onPlayerReady() {
+  if (song_ids[0] !== undefined) {
+    draw();
+    player.loadVideoById(song_ids[0]);
+  }
+
 }
 
 function onError(event) {
   if (event.data == 150) {
-    console.log("error");
     skipSong();
   }
   if (event.data == YT.PlayerState.PAUSED) {
-    nowPlaying = songs[0];
-    player.loadVideoById(nowPlaying);
+    if (song_ids[0] !== undefined) {
+      draw();
+      player.loadVideoById(getRandomStream());
+    }
   }
 }
 
@@ -70,4 +69,43 @@ function onPlayerStateChange(event) {
 
 function getRandomStream() {
   return random_streams[Math.floor(Math.random() * random_streams.length)];
+}
+
+function draw() {
+  try {
+    $("#current").text(song_titles[0]);
+  } catch (E) {
+    $("#current").text("");
+  }
+  try {
+    $("#next").text(song_titles[1]);
+  } catch (E) {
+    $("#next").text("");
+  }
+}
+
+
+function add(song) {
+  song_titles.push(song.doc.data().title);
+  song_ids.push(song.doc.data().video_id);
+  ids.push(song.doc.id);
+}
+
+function remove(song) {
+  removeA(song_titles, song.doc.data().title);
+  removeA(song_ids, song.doc.data().video_id);
+  removeA(ids, song.doc.id);
+}
+
+function removeA(arr) {
+  var what, a = arguments,
+    L = a.length,
+    ax;
+  while (L > 1 && arr.length) {
+    what = a[--L];
+    while ((ax = arr.indexOf(what)) !== -1) {
+      arr.splice(ax, 1);
+    }
+  }
+  return arr;
 }
