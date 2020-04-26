@@ -74,7 +74,7 @@ function createInput() {
 function getSearchResult(searchTerm) {
   extra.empty();
   searchTerm = escapeHtml($("#searchTerm").val()).replace(" ", "%20");
-  let url = "https://www.googleapis.com/youtube/v3/search?part=snippet&key=" + key + "&maxResults=5&duration=short&q=" + searchTerm;
+  let url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=" + key + "&maxResults=5&duration=short&q=" + searchTerm;
   if (searchTerm.length > 2) {
     $.ajax({
       type: "GET",
@@ -84,7 +84,7 @@ function getSearchResult(searchTerm) {
         let songs = json.items;
         if (songs.length > 0) {
           for (const song of songs) {
-            if (song.snippet.liveBroadcastContent !== "live") {
+            if (song.snippet.liveBroadcastContent !== "live" && !song_ids.includes(song.id.videoId)) {
               let id = song.id.videoId;
               let title = unescapeHtml(song.snippet.title);
               let artist = unescapeHtml(song.snippet.channelTitle);
