@@ -9,12 +9,18 @@
   <link rel="stylesheet" media="all" href="css/simple.css">
 </head>
 
-<body class="container-bg" onload="ready()">
+<body class="container-bg">
   <main class="container vertical-middle">
     <section id="extra"></section>
 
     <div class="text-center">
       <input class="btn btn-primary btn-block" type="submit" value="SKIP" onclick="skipSong()">
+      <br>
+      <input class="btn btn-secondary" type="submit" value="0" onclick="changeVolume(0)">
+      <input class="btn btn-secondary" type="submit" value="25" onclick="changeVolume(25)">
+      <input class="btn btn-secondary" type="submit" value="50" onclick="changeVolume(50)">
+      <input class="btn btn-secondary" type="submit" value="75" onclick="changeVolume(75)">
+      <input class="btn btn-secondary" type="submit" value="100" onclick="changeVolume(100)">
       <br>
       <input type="range" min="0" max="100" value="10" id="sliderRange">
     </div>

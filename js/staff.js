@@ -1,22 +1,25 @@
-let webSocket;
-let name;
-let message;
-let score;
 let song_list;
 var rangeslider
 let extra;
 
-function ready() {
+window.onload = function () {
   extra = $("#extra");
   song_list = $("#song_list");
 
   rangeslider = document.getElementById("sliderRange");
   rangeslider.oninput = function () {
-    console.log(this.value);
-    //send(this.value);
+    if(this.value % 5 == 0){
+      db.collection('volume').doc('u7b71I6LS48TfYqOcoi2').update( {volume : this.value} , /* onComplete */);
+    }
   }
-}
+};
 
-function skipSong(id) {
+function skipSong() {
   db.collection('song').doc(ids[0]).delete();
 }
+
+function changeVolume(value){
+  rangeslider.value = value;
+  db.collection('volume').doc('u7b71I6LS48TfYqOcoi2').update( {volume : value} , /* onComplete */);
+}
+

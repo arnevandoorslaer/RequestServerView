@@ -23,6 +23,13 @@ db.collection('song').orderBy('added').onSnapshot(snapshot => {
   });
 });
 
+db.collection('volume').onSnapshot(snapshot => {
+  snapshot.docChanges().forEach(volume => {
+    player.setVolume(volume.doc.data().volume);
+  });
+});
+
+
 async function skipSong() {
   await db.collection('song').doc(ids[0]).delete();
   draw();
