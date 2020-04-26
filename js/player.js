@@ -16,7 +16,7 @@ db.collection('song').orderBy('added').onSnapshot(snapshot => {
       }
     }
     if (song.type == 'removed') {
-      if(typeof song_ids[0] !== 'undefined' && song_ids[0] !== player.getVideoData().video_id){
+      if (typeof song_ids[0] !== 'undefined' && song_ids[0] !== player.getVideoData().video_id) {
         player.loadVideoById(song_ids[0]);
       }
     }
@@ -77,12 +77,16 @@ function onError(event) {
 function onPlayerStateChange(event) {
   if (event.data == YT.PlayerState.ENDED) {
     skipSong();
-  }  
+  }
   if (event.data == YT.PlayerState.PAUSED) {
-    db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update( {paused : true} , /* onComplete */);
-  }  
+    db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update({
+      paused: true
+    }, /* onComplete */ );
+  }
   if (event.data == YT.PlayerState.PLAYING) {
-    db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update( {paused : false} , /* onComplete */);
+    db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update({
+      paused: false
+    }, /* onComplete */ );
   }
 }
 
@@ -105,10 +109,10 @@ function draw() {
   }
 }
 
-function pause(value){
-  if(value){
+function pause(value) {
+  if (value) {
     player.pauseVideo();
-  }else{
+  } else {
     player.playVideo();
   }
 }
