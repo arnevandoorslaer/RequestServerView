@@ -7,7 +7,7 @@ window.onload = function () {
   setTimeout(draw, 1000);
 };
 
-db.collection('song').orderBy('added').onSnapshot(snapshot => draw());
+db.collection('song').onSnapshot(snapshot => draw());
 
 function draw() {
   $("#song_list_body").empty();
