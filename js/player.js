@@ -2,8 +2,27 @@ var player;
 var random_streams = ["taD9hqwCb1o", "hHW1oY26kxQ", "jnGUs3jCb_I", "Xmu8nWKykUw", "kGKkUN50R0c"];
 
 window.onload = function () {
+  draw()
   setTimeout(draw, 1000);
 };
+
+db.collection('song').orderBy('added').onSnapshot(snapshot => {
+  var length = ids.length;
+  draw();
+  snapshot.docChanges().forEach(song => {
+    if (song.type == 'added') {
+      if (length == 1) {
+        player.loadVideoById(song_ids[0]);
+      }
+    }
+    if (song.type == 'removed') {
+      console.log(typeof song_ids[0]);
+      if(typeof song_ids[0] !== 'undefined' && song_ids[0] !== player.getVideoData().video_id){
+        player.loadVideoById(song_ids[0]);
+      }
+    }
+  });
+});
 
 async function skipSong() {
   await db.collection('song').doc(ids[0]).delete();
