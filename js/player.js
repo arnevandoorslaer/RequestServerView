@@ -16,7 +16,6 @@ db.collection('song').orderBy('added').onSnapshot(snapshot => {
       }
     }
     if (song.type == 'removed') {
-      console.log(typeof song_ids[0]);
       if(typeof song_ids[0] !== 'undefined' && song_ids[0] !== player.getVideoData().video_id){
         player.loadVideoById(song_ids[0]);
       }
