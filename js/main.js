@@ -17,7 +17,6 @@ function draw() {
     var title = song_titles[i];
     var artist = song_artists[i];
     var id = song_ids[i];
-
     displaySong(title, artist, id);
   }
 }
@@ -73,6 +72,7 @@ function createInput() {
 
 function getSearchResult(searchTerm) {
   extra.empty();
+  $('#search_list_body').empty();
   searchTerm = escapeHtml($("#searchTerm").val()).replace(" ", "%20");
   let url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=" + key + "&maxResults=5&duration=short&q=" + searchTerm;
   if (searchTerm.length > 2) {

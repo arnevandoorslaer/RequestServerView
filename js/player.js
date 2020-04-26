@@ -59,6 +59,8 @@ function getRandomStream() {
 }
 
 function draw() {
+  $("#current").text("");
+  $("#next").text("");
   try {
     $("#current").text(song_titles[0]);
   } catch (E) {
