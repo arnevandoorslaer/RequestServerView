@@ -23,9 +23,10 @@ db.collection('song').orderBy('added').onSnapshot(snapshot => {
   });
 });
 
-db.collection('volume').onSnapshot(snapshot => {
-  snapshot.docChanges().forEach(volume => {
-    player.setVolume(volume.doc.data().volume);
+db.collection('control').onSnapshot(snapshot => {
+  snapshot.docChanges().forEach(control => {
+    player.setVolume(control.doc.data().volume);
+    pause(control.doc.data().paused);
   });
 });
 
@@ -76,6 +77,12 @@ function onError(event) {
 function onPlayerStateChange(event) {
   if (event.data == YT.PlayerState.ENDED) {
     skipSong();
+  }  
+  if (event.data == YT.PlayerState.PAUSED) {
+    db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update( {paused : true} , /* onComplete */);
+  }  
+  if (event.data == YT.PlayerState.PLAYING) {
+    db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update( {paused : false} , /* onComplete */);
   }
 }
 
@@ -95,5 +102,13 @@ function draw() {
     $("#next").text(song_titles[1]);
   } catch (E) {
     $("#next").text("");
+  }
+}
+
+function pause(value){
+  if(value){
+    player.pauseVideo();
+  }else{
+    player.playVideo();
   }
 }

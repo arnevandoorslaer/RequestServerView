@@ -14,7 +14,7 @@
     <section id="extra"></section>
 
     <div class="text-center">
-      <input class="btn btn-primary btn-block" type="submit" value="SKIP" onclick="skipSong()">
+      <input class="btn btn-danger btn-block" type="submit" value="SKIP" onclick="skipSong()">
       <br>
       <input class="btn btn-secondary" type="submit" value="0" onclick="changeVolume(0)">
       <input class="btn btn-secondary" type="submit" value="25" onclick="changeVolume(25)">
@@ -22,7 +22,10 @@
       <input class="btn btn-secondary" type="submit" value="75" onclick="changeVolume(75)">
       <input class="btn btn-secondary" type="submit" value="100" onclick="changeVolume(100)">
       <br>
-      <input type="range" min="0" max="100" value="10" id="sliderRange">
+      <br>
+      <input type="range" min="0" max="100" value="50" id="sliderRange">
+      <br>
+      <input class="btn btn-secondary" id="paused" type="submit" value="PAUSE/UNPAUSE" onclick="pause()">
     </div>
     </div>
     <section id="song_list"></section>

@@ -1,6 +1,14 @@
 let song_list;
 var rangeslider
 let extra;
+let paused;
+
+db.collection('control').onSnapshot(snapshot => {
+  snapshot.docChanges().forEach(control => {
+    paused = control.doc.data().paused;
+    document.getElementById("paused").value = paused ? "UNPAUSE" : "PAUSE";
+  });
+});
 
 window.onload = function () {
   extra = $("#extra");
@@ -9,7 +17,7 @@ window.onload = function () {
   rangeslider = document.getElementById("sliderRange");
   rangeslider.oninput = function () {
     if(this.value % 5 == 0){
-      db.collection('volume').doc('u7b71I6LS48TfYqOcoi2').update( {volume : this.value} , /* onComplete */);
+      db.collection('volume').doc('RJ2Vest6fX5PldHj4u6V').update( {volume : this.value} , /* onComplete */);
     }
   }
 };
@@ -20,6 +28,11 @@ function skipSong() {
 
 function changeVolume(value){
   rangeslider.value = value;
-  db.collection('volume').doc('u7b71I6LS48TfYqOcoi2').update( {volume : value} , /* onComplete */);
+  db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update( {volume : value} , /* onComplete */);
+}
+
+function pause(){
+  document.getElementById("paused").value = paused ? "UNPAUSE" : "PAUSE";
+  db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update( {paused : !paused} , /* onComplete */);
 }
 
