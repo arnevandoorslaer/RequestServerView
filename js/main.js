@@ -3,31 +3,54 @@ const key = "AIzaSyC5XqwePKeK-GkmPeAyjzhKbKc3lAdL89c";
 
 window.onload = function () {
   extra = $("#extra");
-  createInput();
   setTimeout(draw, 1000);
+  setTimeout(createInput, 500);
 };
 
-db.collection('song').onSnapshot(snapshot => draw());
+db.collection('song').onSnapshot(() => draw());
 
 function draw() {
   $("#song_list_body").empty();
   $("#song_list_thead").removeAttr('hidden');
   displayUpNext();
   for (let i = 0; i < ids.length; i++) {
+    var id = song_ids[i];
     var title = song_titles[i];
     var artist = song_artists[i];
-    var id = song_ids[i];
-    displaySong(title, artist, id);
+    displaySong(id, title, artist);
   }
 }
 
-function displaySong(title, artist, id) {
+function displaySong(id, title, artist) {
   let tr = document.createElement("tr");
   let td = document.createElement("td");
   let tbody = document.querySelector('#song_list_body');
-  tr.id = id;
+  let tdiv = document.createElement("div");
+  let ttitle = document.createElement("strong");
   td.className = "text-center";
-  td.innerHTML = "<strong>" + title + "</strong><br>" + artist;
+  ttitle.textContent = unescapeHtml(title);
+  tdiv.append(ttitle);
+  tdiv.append(document.createElement("br"));
+  tdiv.append(unescapeHtml(artist));
+  td.append(tdiv);
+  tr.append(td);
+  tbody.appendChild(tr);
+}
+
+function displaySearchResult(id, title, artist) {
+  displayResultText();
+  let tbody = document.querySelector('#search_list_body');
+  let tr = document.createElement("tr");
+  let td = document.createElement("td");
+  let tdiv = document.createElement("div");
+  let ttitle = document.createElement("strong");
+  td.className = "text-center";
+  tdiv.addEventListener("click", () => addSong(id, title, artist));
+  ttitle.textContent = unescapeHtml(title);
+  tdiv.append(ttitle);
+  tdiv.append(document.createElement("br"));
+  tdiv.append(unescapeHtml(artist));
+  td.append(tdiv);
   tr.append(td);
   tbody.appendChild(tr);
 }
@@ -40,17 +63,6 @@ function displayUpNext() {
 function displayResultText() {
   let thead = document.querySelector('#search_list_thead');
   thead.innerHTML = "SEARCH RESULTS  Click to add song";
-}
-
-function displaySearchResult(id, title, artist) {
-  displayResultText();
-  let tbody = document.querySelector('#search_list_body');
-  let tr = document.createElement("tr");
-  let td = document.createElement("td");
-  td.className = "text-center";
-  td.innerHTML = "<div onclick=\"addSong(\'" + id + "\',\'" + title + "\',\'" + artist + "\')\"> <strong>" + title + "</strong><br>" + artist + "</div>";
-  tr.append(td);
-  tbody.appendChild(tr);
 }
 
 function createInput() {
@@ -73,7 +85,7 @@ function createInput() {
 function getSearchResult(searchTerm) {
   extra.empty();
   $('#search_list_body').empty();
-  searchTerm = escapeHtml($("#searchTerm").val()).replace(" ", "%20");
+  searchTerm = escape($("#searchTerm").val()).replace(" ", "%20");
   let url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=" + key + "&maxResults=5&duration=short&q=" + searchTerm;
   if (searchTerm.length > 2) {
     $.ajax({
@@ -83,11 +95,13 @@ function getSearchResult(searchTerm) {
         $("#search_list_thead").removeAttr('hidden');
         let songs = json.items;
         if (songs.length > 0) {
+          console.log(song_ids);
           for (const song of songs) {
+            console.log(song.id.videoId);
             if (song.snippet.liveBroadcastContent !== "live" && !song_ids.includes(song.id.videoId)) {
-              let id = song.id.videoId;
-              let title = unescapeHtml(song.snippet.title);
-              let artist = unescapeHtml(song.snippet.channelTitle);
+              var id = song.id.videoId;
+              var title = song.snippet.title;
+              var artist = song.snippet.channelTitle;
               displaySearchResult(id, title, artist);
             }
           }
@@ -118,20 +132,20 @@ async function addSong(id, title, artist) {
 
 function escapeHtml(unsafe) {
   return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .split(/&/g).join("&amp;")
+    .split(/</g).join("&lt;")
+    .split(/>/g).join("&gt;")
+    .split(/"/g).join("&quot;")
+    .split(/'/g).join("&#39;");
 }
 
 function unescapeHtml(unsafe) {
   return unsafe
-    .replace("&amp;", "7")
-    .replace("&lt;", "<")
-    .replace("&gt;", ">")
-    .replace("&quot;", "\"")
-    .replace("&#039;", "\'");
+    .split("&amp;").join("7")
+    .split("&lt;").join("<")
+    .split("&gt;").join(">")
+    .split("&quot;").join("\"")
+    .split("&#39;").join("\'");
 }
 
 function fade_out() {

@@ -15,6 +15,8 @@ function collect() {
 }
 
 function add(song) {
+    console.log(song.doc.id);
+    console.log(song.doc.data());
     song_titles.push(song.doc.data().title);
     song_ids.push(song.doc.data().video_id);
     song_artists.push(song.doc.data().artist);
