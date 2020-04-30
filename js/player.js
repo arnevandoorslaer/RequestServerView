@@ -15,6 +15,7 @@ db.collection('song').orderBy('added').onSnapshot(snapshot => {
         player.loadVideoById(song_ids[0]);
       }
     }
+
     if (song.type == 'removed') {
       if (typeof song_ids[0] !== 'undefined' && song_ids[0] !== player.getVideoData().video_id) {
         player.loadVideoById(song_ids[0]);
@@ -25,8 +26,10 @@ db.collection('song').orderBy('added').onSnapshot(snapshot => {
 
 db.collection('control').onSnapshot(snapshot => {
   snapshot.docChanges().forEach(control => {
-    player.setVolume(control.doc.data().volume);
-    pause(control.doc.data().paused);
+    if(control.type == 'modified'){
+      player.setVolume(control.doc.data().volume);
+      pause(control.doc.data().paused);
+    }
   });
 });
 
@@ -72,17 +75,17 @@ function onError(event) {
       player.loadVideoById(getRandomStream());
     }
   }
+  if (song_ids.length == 0) {
+    player.loadVideoById("jnGUs3jCb_I");
+  }
+
 }
 
 function onPlayerStateChange(event) {
   if (event.data == YT.PlayerState.ENDED) {
     skipSong();
   }
-  if (event.data == YT.PlayerState.PAUSED) {
-    db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update({
-      paused: true
-    }, /* onComplete */ );
-  }
+
   if (event.data == YT.PlayerState.PLAYING) {
     db.collection('control').doc('RJ2Vest6fX5PldHj4u6V').update({
       paused: false
