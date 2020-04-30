@@ -95,9 +95,7 @@ function getSearchResult(searchTerm) {
         $("#search_list_thead").removeAttr('hidden');
         let songs = json.items;
         if (songs.length > 0) {
-          console.log(song_ids);
           for (const song of songs) {
-            console.log(song.id.videoId);
             if (song.snippet.liveBroadcastContent !== "live" && !song_ids.includes(song.id.videoId)) {
               var id = song.id.videoId;
               var title = song.snippet.title;
@@ -128,24 +126,6 @@ async function addSong(id, title, artist) {
   $('#search_list_body').empty();
   $('#search_list_thead').empty();
   $("#search_list_thead").hide();
-}
-
-function escapeHtml(unsafe) {
-  return unsafe
-    .split(/&/g).join("&amp;")
-    .split(/</g).join("&lt;")
-    .split(/>/g).join("&gt;")
-    .split(/"/g).join("&quot;")
-    .split(/'/g).join("&#39;");
-}
-
-function unescapeHtml(unsafe) {
-  return unsafe
-    .split("&amp;").join("7")
-    .split("&lt;").join("<")
-    .split("&gt;").join(">")
-    .split("&quot;").join("\"")
-    .split("&#39;").join("\'");
 }
 
 function fade_out() {

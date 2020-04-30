@@ -98,12 +98,12 @@ function draw() {
   $("#current").text("");
   $("#next").text("");
   try {
-    $("#current").text(song_titles[0]);
+    $("#current").text(unescapeHtml(song_titles[0]));
   } catch (E) {
     $("#current").text("");
   }
   try {
-    $("#next").text(song_titles[1]);
+    $("#next").text(unescapeHtml(song_titles[1]));
   } catch (E) {
     $("#next").text("");
   }

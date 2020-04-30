@@ -15,8 +15,6 @@ function collect() {
 }
 
 function add(song) {
-    console.log(song.doc.id);
-    console.log(song.doc.data());
     song_titles.push(song.doc.data().title);
     song_ids.push(song.doc.data().video_id);
     song_artists.push(song.doc.data().artist);
@@ -42,3 +40,21 @@ function removeA(arr) {
     }
     return arr;
 }
+
+function escapeHtml(unsafe) {
+    return unsafe
+      .split(/&/g).join("&amp;")
+      .split(/</g).join("&lt;")
+      .split(/>/g).join("&gt;")
+      .split(/"/g).join("&quot;")
+      .split(/'/g).join("&#39;");
+  }
+  
+  function unescapeHtml(unsafe) {
+    return unsafe
+      .split("&amp;").join("7")
+      .split("&lt;").join("<")
+      .split("&gt;").join(">")
+      .split("&quot;").join("\"")
+      .split("&#39;").join("\'");
+  }
