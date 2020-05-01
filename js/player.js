@@ -20,6 +20,9 @@ db.collection('song').orderBy('added').onSnapshot(snapshot => {
       if (typeof song_ids[0] !== 'undefined' && song_ids[0] !== player.getVideoData().video_id) {
         player.loadVideoById(song_ids[0]);
       }
+      if(song_ids.length == 0){
+        player.loadVideoById(getRandomStream());
+      }
     }
   });
 });
@@ -69,16 +72,6 @@ function onError(event) {
   if (event.data == 150) {
     skipSong();
   }
-  if (event.data == YT.PlayerState.PAUSED) {
-    if (song_ids[0] !== undefined) {
-      draw();
-      player.loadVideoById(getRandomStream());
-    }
-  }
-  if (song_ids.length == 0) {
-    player.loadVideoById("jnGUs3jCb_I");
-  }
-
 }
 
 function onPlayerStateChange(event) {
