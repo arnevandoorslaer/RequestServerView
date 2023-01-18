@@ -3,7 +3,6 @@ import { songFirestore, timestamp } from '../firebase/config';
 
 const SongSearchTable = ({ songs, setSongs, setSelectedSong }) => {
   const addSong = (song: Song) => {
-    console.log(song);
     setSelectedSong(song);
     songFirestore.collection('song').add({ ...song, added: timestamp() });
     setSongs([]);

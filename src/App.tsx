@@ -1,35 +1,23 @@
 import './App.css';
-
-import useFirestore from './hooks/useFirestore';
-
-import SearchBar from './components/SearchBar';
-import SongOverviewTable from './components/SongOverviewTable';
-import { useState } from 'react';
-import SongSearchTable from './components/SongSearchTable';
-import NotifBar from './components/NotifBar';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import NavBar from './components/NavBar';
+import Home from './pages/home';
+import Test from './pages/test';
 
 function App() {
-  const { docs } = useFirestore('song');
-  const [searchSongs, setSearchSongs] = useState();
-  const [selectedSong, setSelectedSong] = useState();
-  const [error, setError] = useState();
-
   return (
-    <main className='container'>
-      <NotifBar
-        song={selectedSong}
-        error={error}
-        setSelected={setSelectedSong}
-        setError={setError}
-      ></NotifBar>
-      <SearchBar setSongs={setSearchSongs} setError={setError} />
-      <SongSearchTable
-        songs={searchSongs}
-        setSongs={setSearchSongs}
-        setSelectedSong={setSelectedSong}
-      />
-      <SongOverviewTable songs={docs} />
-    </main>
+    <>
+      <HashRouter>
+        <NavBar></NavBar>
+        <Routes>
+          <Route path='/'>
+            <Route index element={<Home />} />
+            <Route path='*' element={<Home />} />
+            <Route path='test' element={<Test />} />
+          </Route>
+        </Routes>
+      </HashRouter>
+    </>
   );
 }
 
