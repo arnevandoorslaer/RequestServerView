@@ -1,7 +1,7 @@
 {
-  "name": "my-app",
+  "name": "request",
   "version": "0.1.0",
-  "homepage": "https://arnevandoorslaer.github.io/react-test",
+  "homepage": "https://arnevandoorslaer.github.io/request",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
