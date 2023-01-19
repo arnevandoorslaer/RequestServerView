@@ -42,6 +42,20 @@ export default function Player() {
     songFirestore.collection('song').doc(current?.id).delete();
   };
 
+  const isPaused = () => {
+    songFirestore
+      .collection('control')
+      .doc(firstDoc.id)
+      .update({ paused: true });
+  };
+
+  const isPlaying = () => {
+    songFirestore
+      .collection('control')
+      .doc(firstDoc.id)
+      .update({ paused: false });
+  };
+
   return (
     <>
       {current && (
@@ -56,6 +70,8 @@ export default function Player() {
                 onReady={onPlayerReady}
                 onEnd={onPlayerEnd}
                 id='player'
+                onPause={isPaused}
+                onPlay={isPlaying}
               />
             </div>
             <div className='pt-3'>
