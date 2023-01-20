@@ -13,20 +13,22 @@ const links = [
 
 const NavBar = () => {
   return (
-    <nav className='navbar bg-dark d-flex p-2'>
-      <div className='d-flex'>
-        {links &&
-          links.map((link) => (
-            <NavLink
-              className='btn btn-dark mx-2 text-decoration-none text-white'
-              to={link.to}
-              key={link.to}
-            >
-              {link.label}
-            </NavLink>
-          ))}
-      </div>
-    </nav>
+    <header>
+      <nav className='navbar bg-dark d-flex p-2'>
+        <div className='d-flex'>
+          {links &&
+            links.map((link) => (
+              <NavLink
+                className='btn btn-dark mx-2 text-decoration-none text-white'
+                to={link.to}
+                key={link.to}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+        </div>
+      </nav>
+    </header>
   );
 };
 
