@@ -7,19 +7,17 @@ import Staff from './pages/staff';
 
 function App() {
   return (
-    <>
-      <HashRouter>
-        <NavBar></NavBar>
-        <Routes>
-          <Route path='/'>
-            <Route index element={<Home />} />
-            <Route path='*' element={<Home />} />
-            <Route path='player' element={<Player />} />
-            <Route path='staff' element={<Staff />} />
-          </Route>
-        </Routes>
-      </HashRouter>
-    </>
+    <HashRouter>
+      <NavBar></NavBar>
+      <Routes>
+        <Route path='/'>
+          <Route index element={<Home />} />
+          <Route path='*' element={<Home />} />
+          <Route path='player' element={<Player />} />
+          <Route path='staff' element={<Staff />} />
+        </Route>
+      </Routes>
+    </HashRouter>
   );
 }
 
