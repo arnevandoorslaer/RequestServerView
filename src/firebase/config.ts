@@ -2,7 +2,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
-firebase.initializeApp({
+const app = firebase.initializeApp({
   apiKey: 'AIzaSyDB6qqS74epkqLD6unepTq1mCygYG1aPA4',
   authDomain: 'songrequest-246613.firebaseapp.com',
   databaseURL: 'https://songrequest-246613.firebaseio.com',
@@ -13,8 +13,9 @@ firebase.initializeApp({
   measurementId: 'G-100748LHW0',
 });
 
+const auth = app.auth();
 const songFirestore = firebase.firestore();
 
 const timestamp = firebase.firestore.FieldValue.serverTimestamp;
 
-export { songFirestore, timestamp };
+export { songFirestore, timestamp, auth };

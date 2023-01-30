@@ -38,8 +38,8 @@ export default function Staff() {
   };
 
   return (
-    <main className='container text-center'>
-      <div className='d-inline-block pt-4 pb-4 mt-5 mb-5'>
+    <main className='d-flex justify-content-center'>
+      <div className='mt-5 col-6 col-md-4'>
         <label className='text-light form-label w-100'>Volume {volume}%</label>
         <input
           className='w-100 form-range mb-5'

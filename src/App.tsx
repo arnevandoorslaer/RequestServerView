@@ -4,8 +4,12 @@ import NavBar from './components/NavBar';
 import Home from './pages/home';
 import Player from './pages/player';
 import Staff from './pages/staff';
+import Login from './pages/login';
+import { useUser } from './hooks/useUser';
 
 function App() {
+  const { user, authorized } = useUser();
+
   return (
     <HashRouter>
       <NavBar></NavBar>
@@ -14,7 +18,8 @@ function App() {
           <Route index element={<Home />} />
           <Route path='*' element={<Home />} />
           <Route path='player' element={<Player />} />
-          <Route path='staff' element={<Staff />} />
+          {authorized && <Route path='staff' element={<Staff />} />}
+          {!user && <Route path='login' element={<Login />} />}
         </Route>
       </Routes>
     </HashRouter>

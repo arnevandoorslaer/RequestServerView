@@ -6,7 +6,7 @@ const useSongFirestore = (collection) => {
   const [docs, setDocs] = useState<Song[] | undefined>();
 
   useEffect(() => {
-    const ubsub = songFirestore
+    const unsub = songFirestore
       .collection(collection)
       .orderBy('added')
       .onSnapshot((snap) => {
@@ -17,7 +17,7 @@ const useSongFirestore = (collection) => {
         setDocs(documents);
       });
 
-    return () => ubsub();
+    return () => unsub();
   }, [collection]);
 
   return { docs };
@@ -26,7 +26,7 @@ const useControlFirestore = (collection) => {
   const [docs, setDocs] = useState<any[] | undefined>();
 
   useEffect(() => {
-    const ubsub = songFirestore.collection(collection).onSnapshot((snap) => {
+    const unsub = songFirestore.collection(collection).onSnapshot((snap) => {
       let documents: Song[] = [];
       snap.forEach((doc) => {
         documents.push({ ...doc.data(), id: doc.id } as any);
@@ -34,7 +34,7 @@ const useControlFirestore = (collection) => {
       setDocs(documents);
     });
 
-    return () => ubsub();
+    return () => unsub();
   }, [collection]);
 
   return { docs };
