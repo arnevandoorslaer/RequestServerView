@@ -1,11 +1,15 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { searchError, songSearch, songSearchList } from '../services/songStore';
 
 const key = 'AIzaSyC5XqwePKeK-GkmPeAyjzhKbKc3lAdL89c';
 
-const SearchBar = ({ setSongs, setError }) => {
-  const [input, setInput] = useState('');
+const SearchBar = () => {
+  const [input, setInput] = useAtom(songSearch);
+  const [, setError] = useAtom(searchError);
+  const [, setSongs] = useAtom(songSearchList);
 
   const submit = () => {
     let url = new URL(

@@ -6,9 +6,13 @@ import Player from './pages/player';
 import Staff from './pages/staff';
 import Login from './pages/login';
 import { useUser } from './hooks/useUser';
+import { useSongStore } from './hooks/useSongStore';
+import { useControlStore } from './hooks/useControlStore';
 
 function App() {
   const { user, authorized } = useUser();
+  useSongStore();
+  useControlStore();
 
   return (
     <HashRouter>

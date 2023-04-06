@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useControlFirestore, useSongFirestore } from '../hooks/useFirestore';
 import { songFirestore } from '../firebase/config';
+import { controlList, songList } from '../services/songStore';
+import { useAtom } from 'jotai';
 
 export default function Staff() {
-  const { docs: controlDocs } = useControlFirestore('control');
-  const { docs } = useSongFirestore('song');
+  const [controls] = useAtom(controlList);
+  const [songs] = useAtom(songList);
 
-  const firstDoc = controlDocs?.at(0) ?? {};
+  const firstDoc = controls?.at(0) ?? {};
   const { volume, paused } = firstDoc;
 
   const [vol, setVolume] = useState(volume);
@@ -31,7 +32,7 @@ export default function Staff() {
   }, [pause, firstDoc.id]);
 
   const skipSong = () => {
-    const current = docs?.at(0);
+    const current = songs?.at(0);
     if (current) {
       songFirestore.collection('song').doc(current.id).delete();
     }

@@ -1,13 +1,16 @@
 import YouTube, { YouTubeProps } from 'react-youtube';
-import { useControlFirestore, useSongFirestore } from '../hooks/useFirestore';
 import { songFirestore } from '../firebase/config';
 import { useEffect, useRef } from 'react';
+import { useAtom } from 'jotai';
+import { controlList, songList } from '../services/songStore';
 
 export default function Player() {
-  const { docs } = useSongFirestore('song');
+  const [songs] = useAtom(songList);
+  const [current, next, _] = songs;
 
-  const { docs: controlDocs } = useControlFirestore('control');
-  const firstDoc = controlDocs?.at(0) ?? {};
+  const [controls] = useAtom(controlList);
+
+  const firstDoc = controls?.at(0) ?? {};
   const { volume, paused } = firstDoc;
 
   const player = useRef<YouTube | any>();
@@ -20,9 +23,6 @@ export default function Player() {
         : player.current.getInternalPlayer().playVideo();
     }
   }, [volume, paused]);
-
-  const current = docs?.at(0);
-  const next = docs?.at(1);
 
   const opts: YouTubeProps['opts'] = {
     width: 600,

@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
+import { songFirestore } from '../firebase/config'
 
 const useUser = () => {
   const [user, setUser] = useState<User>();

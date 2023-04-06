@@ -1,7 +1,12 @@
 import { Song } from '../model/song';
 import { songFirestore, timestamp } from '../firebase/config';
+import { selectedSongAtom, songSearchList } from '../services/songStore';
+import { useAtom } from 'jotai';
 
-const SongSearchTable = ({ songs, setSongs, setSelectedSong }) => {
+const SongSearchTable = () => {
+  const [songs, setSongs] = useAtom(songSearchList);
+  const [, setSelectedSong] = useAtom(selectedSongAtom);
+
   const addSong = (song: Song) => {
     setSelectedSong(song);
     songFirestore.collection('song').add({ ...song, added: timestamp() });
@@ -10,7 +15,7 @@ const SongSearchTable = ({ songs, setSongs, setSelectedSong }) => {
 
   return (
     <>
-      {songs && (
+      {songs && songs.length > 0 && (
         <table className='table table-striped table-dark'>
           <tbody>
             {songs &&
